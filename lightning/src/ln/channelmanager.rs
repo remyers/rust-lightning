@@ -2789,6 +2789,7 @@ impl<ChanSigner: ChannelKeys, M: Deref> events::MessageSendEventsProvider for Ch
 		}
 
 		let mut ret = Vec::new();
+		// This is once place we could collect messages
 		let mut channel_state = self.channel_state.lock().unwrap();
 		mem::swap(&mut ret, &mut channel_state.pending_msg_events);
 		ret

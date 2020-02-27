@@ -884,6 +884,7 @@ impl<Descriptor: SocketDescriptor, CM: Deref> PeerManager<Descriptor, CM> where 
 						}
 					}
 				}
+				println!("MESH: Got event inside peer_handler!");
 				match event {
 					MessageSendEvent::SendAcceptChannel { ref node_id, ref msg } => {
 						log_trace!(self, "Handling SendAcceptChannel event in peer_handler for node {} for channel {}",
@@ -960,6 +961,10 @@ impl<Descriptor: SocketDescriptor, CM: Deref> PeerManager<Descriptor, CM> where 
 								//TODO: Do whatever we're gonna do for handling dropped messages
 							});
 						for msg in update_add_htlcs {
+							log_trace!(self, "mesh_debug: {:?}", msg);
+
+							/// HTLCs already include an onion at this stage
+
 							peer.pending_outbound_buffer.push_back(peer.channel_encryptor.encrypt_message(&encode_msg!(msg)));
 						}
 						for msg in update_fulfill_htlcs {
@@ -1014,7 +1019,10 @@ impl<Descriptor: SocketDescriptor, CM: Deref> PeerManager<Descriptor, CM> where 
 						let (mut descriptor, peer) = get_peer_for_forwarding!(node_id, {
 								//TODO: Do whatever we're gonna do for handling dropped messages
 							});
-						peer.pending_outbound_buffer.push_back(peer.channel_encryptor.encrypt_message(&encode_msg!(msg)));
+						println!("MESH raw data:\n{:?}", &encode_msg!(msg));
+						let enc_msg = peer.channel_encryptor.encrypt_message(&encode_msg!(msg));
+						println!("MESH encrypted data:\n{:?}", &enc_msg);
+						peer.pending_outbound_buffer.push_back(enc_msg);
 						self.do_attempt_write_data(&mut descriptor, peer);
 					},
 					MessageSendEvent::BroadcastChannelAnnouncement { ref msg, ref update_msg } => {

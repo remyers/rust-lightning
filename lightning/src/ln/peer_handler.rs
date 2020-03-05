@@ -963,7 +963,7 @@ impl<Descriptor: SocketDescriptor, CM: Deref> PeerManager<Descriptor, CM> where 
 						for msg in update_add_htlcs {
 							log_trace!(self, "mesh_debug: {:?}", msg);
 
-							/// HTLCs already include an onion at this stage
+							// HTLCs already include an onion at this stage
 
 							peer.pending_outbound_buffer.push_back(peer.channel_encryptor.encrypt_message(&encode_msg!(msg)));
 						}

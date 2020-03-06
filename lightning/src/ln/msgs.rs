@@ -711,7 +711,7 @@ pub(crate) struct OnionPacket {
 	/// have to deserialize OnionPackets contained in UpdateAddHTLCs even if the ephemeral public
 	/// key (here) is bogus, so we hold a Result instead of a PublicKey as we'd like.
 	pub(crate) public_key: Result<PublicKey, secp256k1::Error>,
-	pub(crate) hop_data: [u8; 20*65],
+	pub(crate) hop_data: [u8; 65],
 	pub(crate) hmac: [u8; 32],
 }
 
@@ -997,7 +997,7 @@ impl_writeable_len_match!(OnionErrorPacket, {
 
 impl Writeable for OnionPacket {
 	fn write<W: Writer>(&self, w: &mut W) -> Result<(), ::std::io::Error> {
-		w.size_hint(1 + 33 + 20*65 + 32);
+		w.size_hint(1 + 33 + 65 + 32);
 		self.version.write(w)?;
 		match self.public_key {
 			Ok(pubkey) => pubkey.write(w)?,

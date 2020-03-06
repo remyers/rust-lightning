@@ -159,7 +159,7 @@ pub(super) fn build_onion_payloads(path: &Vec<RouteHop>, total_msat: u64, paymen
 
 /// Length of the onion data packet. Before TLV-based onions this was 20 65-byte hops, though now
 /// the hops can be of variable length.
-pub(crate) const ONION_DATA_LEN: usize = 20*65;
+pub(crate) const ONION_DATA_LEN: usize = 65;
 
 #[inline]
 fn shift_arr_right(arr: &mut [u8; ONION_DATA_LEN], amt: usize) {
